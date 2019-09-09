@@ -3,7 +3,7 @@
 import rospy 
 import rospkg
 import csv
-from sensor_msgs.msg import PointCloud
+from sensor_msgs.msg import PointCloud2
 from geometry_msgs.msg import Point32
 
 rospack = rospkg.RosPack()

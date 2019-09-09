@@ -3,15 +3,20 @@
     <remap from="input" to="kinect_head/depth_registered/points"/>
     <remap from="output" to="point_converted"/>
   </node>
-</launch>
 
-<!--
+  <!-- output "vase_pc"-->
+  <node name="vase_pc_publisher_" pkg="vase_icp" type="vase_pc_publisher.py"/>
+
+  <!--
   <node name="icp_registration"
         pkg="nodelet" type="nodelet"
         args="standalone jsk_pcl/ICPRegistration"
         output="screen">
-    <remap from="~input" to="" />
-    <remap from="~input_reference" to="subsample_reference/output" />
+    <remap from="~input" to="point_converted" />
+    <remap from="~input_reference" to="" />
   </node>
--->
+  -->
+
+</launch>
+
 

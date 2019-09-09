@@ -1,9 +1,14 @@
+#!/usr/bin/env python
+
 import rospy 
+import rospkg
 import csv
 from sensor_msgs.msg import PointCloud
 from geometry_msgs.msg import Point32
 
-csv_file = open("../model/vase.csv", "r" )
+rospack = rospkg.RosPack()
+path = rospack.get_path("vase_icp")
+csv_file = open(path + "/model/vase.csv", "r" )
 f = csv.reader(csv_file, delimiter = ',')
 
 msg_pc = PointCloud()

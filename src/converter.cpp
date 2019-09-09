@@ -42,8 +42,8 @@ int main (int argc, char** argv)
 {
   ros::init (argc, argv, "pcl_center");
   ros::NodeHandle nh;
-  ros::Subscriber sub = nh.subscribe("/kinect_head/depth_registered/points", 1, cloud_cb);
-  pub = nh.advertise<sensor_msgs::PointCloud>("/kinect_converted", 1);
+  ros::Subscriber sub = nh.subscribe("input", 1, cloud_cb);
+  pub = nh.advertise<sensor_msgs::PointCloud>("output", 1);
   ros::spin ();
 }
 

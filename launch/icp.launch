@@ -1,0 +1,17 @@
+<launch>
+  <node name="converter" pkg="vase_icp" type="converter">
+    <remap from="input" to="kinect_head/depth_registered/points"/>
+    <remap from="output" to="point_converted"/>
+  </node>
+</launch>
+
+<!--
+  <node name="icp_registration"
+        pkg="nodelet" type="nodelet"
+        args="standalone jsk_pcl/ICPRegistration"
+        output="screen">
+    <remap from="~input" to="" />
+    <remap from="~input_reference" to="subsample_reference/output" />
+  </node>
+-->
+

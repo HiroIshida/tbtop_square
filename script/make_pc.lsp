@@ -39,6 +39,19 @@
   (setq *cubes* (car tmp))
   (setq *vecs* (cdr tmp)))
 
+(setq *txt* "")
+(dolist (vec *vecs*)
+  (let ((line (concatenate string (string [vec 0]) ", " (string [vec 1]) ", " (string [vec 2]))))
+    (setq *txt* (concatenate string *txt* line '(#\Newline)))))
+
+
+(with-open-file (str "../model/vase.csv"
+                       :direction :output)
+  (format str *txt*))
+
+
+
+
 
 
 

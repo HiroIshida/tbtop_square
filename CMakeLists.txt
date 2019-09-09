@@ -22,8 +22,8 @@ include_directories(
 )
 
 include_directories(include ${catkin_INCLUDE_DIRS} ${PCL_INCLUDE_DIRS})
-add_library(${PROJECT_NAME} src/tmp.cpp)
-add_executable(tmp src/tmp.cpp)
-target_link_libraries(tmp ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+add_library(${PROJECT_NAME} src/converter.cpp)
+add_executable(converter src/converter.cpp)
+target_link_libraries(converter ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 add_definitions(-std=c++11)

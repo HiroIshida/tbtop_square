@@ -1,5 +1,5 @@
 <launch>
-  <node name="converter" pkg="vase_icp" type="converter">
+  <node name="converter" pkg="tbtop_square" type="converter">
     <remap from="output" to="vase_pc"/>
   </node>
 

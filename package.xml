@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>vase_icp</name>
+  <name>tbtop_square</name>
   <version>0.0.0</version>
-  <description>The vase_icp package</description>
+  <description>The tbtop_square package</description>
 
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->

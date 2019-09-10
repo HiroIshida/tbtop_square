@@ -5,7 +5,7 @@ import csv
 import matplotlib.pyplot as plt
 from sensor_msgs.msg import PointCloud2
 from geometry_msgs.msg import Point
-from vase_icp.msg import Projected
+from tbtop_square.msg import Projected
 from math import *
 import numpy as np
 from scipy import stats
@@ -15,11 +15,6 @@ import time
 from utils import *
 import cv2
 
-img = cv2.imread("../model/image_raw_screenshot_3.png")
-gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-jdict = json_read()
-x = jdict["x"]
 
 def pts2img(x, N, margin = 1):
     x0 = x[0]
@@ -166,7 +161,6 @@ def compute_optimal_angle(x_data):
     return ret
     """
 
-"""
 rospy.init_node("detect_square", anonymous = True)
 pub = rospy.Publisher("s_est_pointcloud", Point, queue_size = 10)
 
@@ -228,7 +222,6 @@ def show():
 
 rospy.Subscriber("cloud2d_projected", Projected, callback)
 rospy.spin()
-"""
 
 
 

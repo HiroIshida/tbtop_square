@@ -3,7 +3,7 @@
 #include <sensor_msgs/PointCloud.h>
 #include <geometry_msgs/Point32.h>
 #include <pcl_conversions/pcl_conversions.h> // japanese version
-#include <vase_icp/Projected.h>
+#include <tbtop_square/Projected.h>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -35,7 +35,7 @@ void callback (const sensor_msgs::PointCloud2ConstPtr& msg_input)
     x_array.data[i] = cloud.points[i].x;
     y_array.data[i] = cloud.points[i].y;
   }
-  vase_icp::Projected msg;
+  tbtop_square::Projected msg;
   msg.x_array = x_array;
   msg.y_array = y_array;
   pub.publish(msg);
@@ -45,7 +45,7 @@ int main (int argc, char** argv)
 {
   ros::init(argc, argv, "projector");
   ros::NodeHandle nh;
-  pub = nh.advertise<vase_icp::Projected>("output", 1);
+  pub = nh.advertise<tbtop_square::Projected>("output", 1);
   ros::Subscriber sub = nh.subscribe("input", 1000, callback);
   ros::spin();
 

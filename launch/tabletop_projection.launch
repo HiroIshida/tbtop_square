@@ -1,0 +1,7 @@
+<launch>
+  <arg name="input" default="/vase_detection/passthrough/output"/>
+  <node name="projector" pkg="vase_icp" type="projector">
+    <remap from="output" to="cloud2d_projected"/>
+    <remap from="input" to="$(arg input)"/>
+  </node>
+</launch>

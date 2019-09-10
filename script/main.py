@@ -31,8 +31,8 @@ class MyQueue:
 
 class SquareDetector:
     def __init__(self, n_ave = 10):
-        self.sub = rospy.Subscriber("cloud2d_projected", Projected, self.callback)
-        self.pub = rospy.Publisher("s_est_pointcloud", Point, queue_size = 10)
+        self.sub = rospy.Subscriber("input", Projected, self.callback)
+        self.pub = rospy.Publisher("output", Point, queue_size = 10)
         self.s_queue = MyQueue(n_ave)
 
     def callback(self, msg):

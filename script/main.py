@@ -40,13 +40,14 @@ class SquareDetector:
         x2 = np.array(msg.y_array.data)
         x = np.vstack((x1, x2))
         s_est_, size = detect_rect(x)
+        #print "s-est:" + str(s_est_)
 
-        isInvalid =  size < 0.005 ** 2
+        isInvalid = (size < 0.005 ** 2 or s_est_[2] == 0.0)
         if not isInvalid:
             self.s_queue.push(s_est_)
 
         s_est = self.s_queue.mean()
-        print s_est
+        print "average: " + str(s_est)
         s_est = Point(x = s_est[0], y = s_est[1], z = s_est[2])
         self.pub.publish(s_est)
 

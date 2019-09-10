@@ -15,37 +15,27 @@ import time
 from detect_square import detect_rect
 import cv2
 
-rospy.init_node("detect_square", anonymous = True)
-pub = rospy.Publisher("s_est_pointcloud", Point, queue_size = 10)
 
-global angle_mean
-angle_mean = None
+class SquareDetector:
+    def __init__(self, n_ave = 5):
+        self.sub = rospy.Subscriber("cloud2d_projected", Projected, self.callback)
+        self.pub = rospy.Publisher("s_est_pointcloud", Point, queue_size = 10)
+        self.s_queue = []
 
-global counter
-counter = 1
-
-
-global x
-def callback(msg):
-    x1 = np.array(msg.x_array.data)
-    x2 = np.array(msg.y_array.data)
-    global x
-    x = np.vstack((x1, x2))
-
-    s_est_ = detect_rect(x)
-    print s_est_
-    s_est = Point(x = s_est_[0], y = s_est_[1], z = s_est_[2])
-    pub.publish(s_est)
+    def callback(self, msg):
+        x1 = np.array(msg.x_array.data)
+        x2 = np.array(msg.y_array.data)
+        x = np.vstack((x1, x2))
+        s_est_ = detect_rect(x)
+        print s_est_
+        s_est = Point(x = s_est_[0], y = s_est_[1], z = s_est_[2])
+        self.pub.publish(s_est)
 
 
-def show():
-    global x
-    plt.scatter(x[0, :], x[1, :])
-    plt.axis("equal")
-    plt.show()
-
-rospy.Subscriber("cloud2d_projected", Projected, callback)
-rospy.spin()
+if __name__=='__main__':
+    rospy.init_node("detect_square", anonymous = True)
+    sd = SquareDetector()
+    rospy.spin()
 
 
 

@@ -66,11 +66,15 @@ def detect_rect(x, debug = False):
     y_mean = np.mean(np.array([p[1] for p in points]))
 
     vecs = []
+    lens = []
     for pair_idx in [[0, 1], [1, 2], [2, 3], [3, 0]]:
         vec_ = points[pair_idx[1]] - points[pair_idx[0]]
-        vec = vec_/np.linalg.norm(vec_)
+        leng = np.linalg.norm(vec_)
+        vec = vec_/leng
         vecs.append(vec)
+        lens.append(leng)
 
+    size = lens[0] * lens[1]
     angle = acos(vecs[0][0]) % (pi/2)
     s_est = [x_mean, y_mean, angle]
-    return s_est
+    return s_est, size

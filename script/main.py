@@ -47,7 +47,7 @@ class SquareDetector:
 
         s_est = self.s_queue.mean()
         print s_est
-        s_est = Point(x = s_est_[0], y = s_est_[1], z = s_est_[2])
+        s_est = Point(x = s_est[0], y = s_est[1], z = s_est[2])
         self.pub.publish(s_est)
 
 

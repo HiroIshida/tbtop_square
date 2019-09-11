@@ -29,7 +29,7 @@ def pts2img(x, N, margin = 0.3):
     bmax = np.array([bmax0, bmax1])
     gsize = (np.array(bmax) - np.array(bmin))/N
     idxes_list = [(idxes0_[i], idxes1_[i]) for i in range(idxes0_.size)]
-    idxes_set = set(idxes_list)
+    idxes_set = [x for x in set(idxes_list) if idxes_list.count(x) > 1]
     rate = len(idxes_set)*1.0/(N**2)
     print rate
     isInvalid = rate < 0.1
@@ -42,8 +42,8 @@ def pts2img(x, N, margin = 0.3):
 
 def detect_rect(x, debug = False):
     debug = False
-    img, bmin, dx, isInvalid_pixels = pts2img(x, 100)
-    img = cv2.blur(img, (10, 10))
+    img, bmin, dx, isInvalid_pixels = pts2img(x, 50)
+    img = cv2.blur(img, (5, 5))
     _, img_t = cv2.threshold(img, 10, 255, 0)
 
     _, contours, _ = cv2.findContours(img_t, 1, 2)

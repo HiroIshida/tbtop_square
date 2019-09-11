@@ -50,10 +50,11 @@ def detect_rect(x, debug = False):
     box = cv2.boxPoints(rect)
     box = np.int0(box)
 
+    _, img_debug = cv2.threshold(img, 100, 100, 0)
+    for pair in box:
+        img_debug[pair[0], pair[1]] = 255
+
     if debug:
-        _, img_debug = cv2.threshold(img, 100, 100, 0)
-        for pair in box:
-            img_debug[pair[0], pair[1]] = 255
         cv2.imshow("image", img_debug)
         cv2.waitKey(2)
         time.sleep(3)
@@ -77,4 +78,4 @@ def detect_rect(x, debug = False):
     size = lens[0] * lens[1]
     angle = acos(vecs[0][0]) % (pi/2)
     s_est = [x_mean, y_mean, angle]
-    return s_est, size
+    return s_est, size, img_debug

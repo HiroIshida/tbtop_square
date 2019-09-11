@@ -4,4 +4,8 @@
     <remap from="output" to="cloud2d_projected"/>
     <remap from="input" to="$(arg input)"/>
   </node>
+  <node name="square_detector" pkg="tbtop_square" type="main.py">
+    <remap from="input" to="cloud2d_projected"/>
+    <remap from="output" to="square_pose"/>
+  </node>
 </launch>

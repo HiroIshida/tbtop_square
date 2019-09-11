@@ -42,7 +42,7 @@ def detect_rect(x, debug = False):
     debug = False
     img, bmin, dx = pts2img(x, 100)
     img = cv2.blur(img, (10, 10))
-    _, img_t = cv2.threshold(img, 100, 255, 0)
+    _, img_t = cv2.threshold(img, 10, 255, 0)
 
     _, contours, _ = cv2.findContours(img_t, 1, 2)
     cnt = contours[0]
@@ -79,6 +79,7 @@ def detect_rect(x, debug = False):
         vec = vec_/leng
         vecs.append(vec)
         lens.append(leng)
+    print vec
 
     size = lens[0] * lens[1]
     angle = acos(vecs[0][0]) % (pi/2)

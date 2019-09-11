@@ -7,7 +7,7 @@ from utils import *
 import cv2
 
 
-def pts2img(x, N, margin = 1):
+def pts2img(x, N, margin = 0.3):
     x0 = x[0]
     x1 = x[1]
 
@@ -50,9 +50,14 @@ def detect_rect(x, debug = False):
     box = cv2.boxPoints(rect)
     box = np.int0(box)
 
-    _, img_debug = cv2.threshold(img, 100, 100, 0)
+    _, img_debug = cv2.threshold(img_t, 100, 50, 0)
+
     for pair in box:
-        img_debug[pair[0], pair[1]] = 255
+        img_debug[pair[1], pair[0]] = 255
+
+    for pair_ in cnt:
+        pair = pair_[0]
+        img_debug[pair[1], pair[0]] = 130
 
     if debug:
         cv2.imshow("image", img_debug)

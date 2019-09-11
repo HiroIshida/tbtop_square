@@ -50,11 +50,11 @@ class SquareDetector:
         if not isInvalid:
             self.s_queue.push(s_est_)
             self.pub_img.publish(msg)
+            s_est = self.s_queue.mean()
+            print "average: " + str(s_est)
+            s_est = Point(x = s_est[0], y = s_est[1], z = s_est[2])
+            self.pub.publish(s_est)
 
-        s_est = self.s_queue.mean()
-        print "average: " + str(s_est)
-        s_est = Point(x = s_est[0], y = s_est[1], z = s_est[2])
-        self.pub.publish(s_est)
 
 
 if __name__=='__main__':

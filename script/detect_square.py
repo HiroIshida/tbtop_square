@@ -6,7 +6,6 @@ import time
 from utils import *
 import cv2
 
-
 def pts2img(x, N, margin = 0.3):
     x0 = x[0]
     x1 = x[1]
@@ -31,16 +30,19 @@ def pts2img(x, N, margin = 0.3):
     gsize = (np.array(bmax) - np.array(bmin))/N
     idxes_list = [(idxes0_[i], idxes1_[i]) for i in range(idxes0_.size)]
     idxes_set = set(idxes_list)
+    rate = len(idxes_set)*1.0/(N**2)
+    print rate
+    isInvalid = rate < 0.1
 
     img = np.zeros((N, N), dtype = "uint8")
     for pair in idxes_set:
         img[pair[0], pair[1]] = 255
 
-    return img, bmin, gsize
+    return img, bmin, gsize, isInvalid
 
 def detect_rect(x, debug = False):
     debug = False
-    img, bmin, dx = pts2img(x, 100)
+    img, bmin, dx, isInvalid_pixels = pts2img(x, 100)
     img = cv2.blur(img, (10, 10))
     _, img_t = cv2.threshold(img, 10, 255, 0)
 
@@ -79,9 +81,10 @@ def detect_rect(x, debug = False):
         vec = vec_/leng
         vecs.append(vec)
         lens.append(leng)
-    print vec
 
     size = lens[0] * lens[1]
     angle = acos(vecs[0][0]) % (pi/2)
     s_est = [x_mean, y_mean, angle]
-    return s_est, size, img_debug
+
+    isInvalid = (size < 0.005 ** 2) or isInvalid_pixels
+    return s_est, img_debug, isInvalid

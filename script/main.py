@@ -31,7 +31,7 @@ class MyQueue:
         return np.array(s_est_lst)
 
 class SquareDetector:
-    def __init__(self, n_ave = 10):
+    def __init__(self, n_ave = 4):
         self.sub = rospy.Subscriber("/cloud2d_projected", Projected, self.callback)
         self.pub = rospy.Publisher("/square_pose", Point, queue_size = 10)
         self.pub_img = rospy.Publisher("/tbtop_debug_image", Image)
@@ -41,16 +41,15 @@ class SquareDetector:
         x1 = np.array(msg.x_array.data)
         x2 = np.array(msg.y_array.data)
         x = np.vstack((x1, x2))
-        s_est_, size, img_ = detect_rect(x)
+        s_est_, img_, isInvalid = detect_rect(x)
 
         img = cv2.cvtColor(img_, cv2.COLOR_GRAY2BGR)
         bridge = CvBridge()
         msg = bridge.cv2_to_imgmsg(img, 'bgr8')
-        self.pub_img.publish(msg)
 
-        isInvalid = (size < 0.005 ** 2 or s_est_[2] == 0.0)
         if not isInvalid:
             self.s_queue.push(s_est_)
+            self.pub_img.publish(msg)
 
         s_est = self.s_queue.mean()
         print "average: " + str(s_est)

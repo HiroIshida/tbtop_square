@@ -70,8 +70,8 @@ def detect_rect(x, debug = False):
     points = []
     for pair in box:
         points.append(bmin + pair * dx)
-    x_mean = np.mean(np.array([p[0] for p in points]))
-    y_mean = np.mean(np.array([p[1] for p in points]))
+    #x_mean = np.mean(np.array([p[0] for p in points]))
+    #y_mean = np.mean(np.array([p[1] for p in points]))
 
     vecs = []
     lens = []
@@ -84,7 +84,10 @@ def detect_rect(x, debug = False):
 
     size = lens[0] * lens[1]
     angle = acos(vecs[0][0]) % (pi/2)
+    x_mean = np.mean(x[0])
+    y_mean = np.mean(x[1])
     s_est = [x_mean, y_mean, angle]
 
     isInvalid = (size < 0.005 ** 2) or isInvalid_pixels
     return s_est, img_debug, isInvalid
+

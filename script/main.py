@@ -33,7 +33,7 @@ class MyQueue:
 class SquareDetector:
     def __init__(self, n_ave = 4):
         self.sub = rospy.Subscriber("/cloud2d_projected", Projected, self.callback)
-        self.pub = rospy.Publisher("/square_pose", Point, queue_size = 10)
+        self.pub = rospy.Publisher("/square_pose", Point, queue_size = 1)
         self.pub_img = rospy.Publisher("/tbtop_debug_image", Image)
         self.s_queue = MyQueue(n_ave)
 

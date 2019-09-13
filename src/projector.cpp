@@ -35,7 +35,7 @@ void callback (const sensor_msgs::PointCloud2ConstPtr& msg_input)
   std::vector<int> idxes_valid;
   for(int i=0; i < cloud.points.size(); i++){
     // 3 cm
-    if(cloud.points[i].z > z_max - 0.03){
+    if(cloud.points[i].z > z_max - 1.0){
       idxes_valid.push_back(i);
     }
   }

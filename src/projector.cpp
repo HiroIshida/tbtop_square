@@ -26,12 +26,26 @@ void callback (const sensor_msgs::PointCloud2ConstPtr& msg_input)
   // tutorial in Japanese is wrong (using depricated header)  
   pcl::PointCloud<pcl::PointXYZ> cloud;
   pcl::fromROSMsg(*msg_input, cloud); 
-  int N = cloud.points.size();
 
+  float z_max = 0.0;
+  for(int i=0; i < cloud.points.size(); i++){
+    z_max = std::max(z_max, cloud.points[i].z);
+  }
+
+  std::vector<int> idxes_valid;
+  for(int i=0; i < cloud.points.size(); i++){
+    // 3 cm
+    if(cloud.points[i].z > z_max - 0.03){
+      idxes_valid.push_back(i);
+    }
+  }
+
+  int N = idxes_valid.size();
   std_msgs::Float32MultiArray x_array, y_array;
   x_array.data.resize(N);
   y_array.data.resize(N);
   for(int i=0; i< N; i++){
+    int idx = idxes_valid[i];
     x_array.data[i] = cloud.points[i].x;
     y_array.data[i] = cloud.points[i].y;
   }

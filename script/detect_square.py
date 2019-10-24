@@ -60,7 +60,7 @@ def check_validity(img, box):
 def detect_rect(x, debug = False):
     debug = False
     img, bmin, dx, isInvalid_pixels = pts2img(x, 50)
-    img = cv2.blur(img, (5, 5))
+    img = cv2.blur(img, (7, 7))
     _, img_t = cv2.threshold(img, 1, 255, 0)
 
     _, contours, _ = cv2.findContours(img_t, 1, 2)
@@ -106,6 +106,5 @@ def detect_rect(x, debug = False):
     s_est = [x_mean, y_mean, angle]
 
     isInvalid = not check_validity(img_t, box)
-    print isInvalid
     return s_est, img_debug, isInvalid
 

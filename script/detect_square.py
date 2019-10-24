@@ -7,6 +7,10 @@ from utils import *
 import cv2
 
 def pts2img(x, N, margin = 0.3):
+    """
+    not only convert points into image, check validity interms of ratio of pixels of objects 
+    to the whole pixels
+    """
     x0 = x[0]
     x1 = x[1]
 
@@ -39,6 +43,19 @@ def pts2img(x, N, margin = 0.3):
         img[pair[0], pair[1]] = 255
 
     return img, bmin, gsize, isInvalid
+
+def check_validity(img, box):
+    n_filled_pixel = img[img > 0.0].size
+
+    def guess_pixels_in_box(box):
+        x_box, y_box = [[e[i] for e in box] for i in range(2)]
+        [[x_min, x_max], [y_min, y_max]] = [[fn(e) for fn in [min, max]] for e in [x_box, y_box]]
+        return (x_max - x_min) * (y_max - y_min)
+
+    isValid = (guess_pixels_in_box(box)/n_filled_pixel > 0.8)
+    return isValid
+
+
 
 def detect_rect(x, debug = False):
     debug = False
@@ -88,6 +105,7 @@ def detect_rect(x, debug = False):
     y_mean = np.mean(x[1])
     s_est = [x_mean, y_mean, angle]
 
-    isInvalid = (size < 0.005 ** 2) or isInvalid_pixels
+    isInvalid = not check_validity(img_t, box)
+    print isInvalid
     return s_est, img_debug, isInvalid
 

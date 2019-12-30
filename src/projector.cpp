@@ -35,7 +35,7 @@ void callback (const sensor_msgs::PointCloud2ConstPtr& msg_input)
   std::vector<int> idxes_valid;
   for(int i=0; i < cloud.points.size(); i++){
     // 3 cm
-    if(cloud.points[i].z > z_max - 1.0){
+    if(cloud.points[i].z > z_max - 3.0){
       idxes_valid.push_back(i);
     }
   }
@@ -60,7 +60,7 @@ int main (int argc, char** argv)
   ros::init(argc, argv, "projector");
   ros::NodeHandle nh;
   pub = nh.advertise<tbtop_square::Projected>("output", 1);
-  ros::Subscriber sub = nh.subscribe("input", 1000, callback);
+  ros::Subscriber sub = nh.subscribe("input", 10, callback);
   ros::spin();
 
 }

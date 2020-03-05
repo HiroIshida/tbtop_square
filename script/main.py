@@ -90,17 +90,18 @@ class SquareDetector:
             #s = np.array([center[0], center[1], angle])
             self.x_queue.push(center)
             self.angle_queue.push(angle)
-            x_mean = self.x_queue.mean()
-            angle_mean = self.angle_queue.mean() + pi/2
-            if angle_mean > pi/2:
-                angle_mean = angle_mean - pi/2
 
-            x_mean_pub= Point(x = x_mean[0], y = x_mean[1], z = angle_mean)
-            self.pub.publish(x_mean_pub)
+        x_mean = self.x_queue.mean()
+        angle_mean = self.angle_queue.mean() + pi/2
+        if angle_mean > pi/2:
+            angle_mean = angle_mean - pi/2
 
-            rot = tf.transformations.quaternion_from_euler(0, 0.0, angle_mean)
-            trans = [x_mean[0],x_mean[1], 0.723]
-            self.br.sendTransform(trans, rot, rospy.Time.now(), "can", "base_link")
+        x_mean_pub= Point(x = x_mean[0], y = x_mean[1], z = angle_mean)
+        self.pub.publish(x_mean_pub)
+
+        rot = tf.transformations.quaternion_from_euler(0, 0.0, angle_mean)
+        trans = [x_mean[0],x_mean[1], 0.723]
+        self.br.sendTransform(trans, rot, rospy.Time.now(), "can", "base_link")
 
 if __name__=='__main__':
     rospy.init_node("detect_square", anonymous = True)

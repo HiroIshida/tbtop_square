@@ -16,6 +16,8 @@ from detect_square import detect_rect
 import cv2
 from cv_bridge import CvBridge
 
+import tf
+
 class MyQueue:
     def __init__(self, N):
         self.N = N
@@ -36,6 +38,7 @@ class SquareDetector:
         self.pub = rospy.Publisher("/square_pose", Point, queue_size = 1)
         self.pub_img = rospy.Publisher("/tbtop_debug_image", Image)
         self.s_queue = MyQueue(n_ave)
+        self.br = tf.TransformBroadcaster()
 
     def callback(self, msg):
         x1 = np.array(msg.x_array.data)
@@ -52,8 +55,12 @@ class SquareDetector:
             self.pub_img.publish(msg)
             s_est = self.s_queue.mean()
             print "average: " + str(s_est)
-            s_est = Point(x = s_est[0], y = s_est[1], z = s_est[2])
-            self.pub.publish(s_est)
+            s_est_msg = Point(x = s_est[0], y = s_est[1], z = s_est[2])
+            self.pub.publish(s_est_msg)
+            trans = [s_est[0], s_est[1], 0.723]
+
+            rot = tf.transformations.quaternion_from_euler(0, 0.0, s_est[2])
+            self.br.sendTransform(trans, rot, rospy.Time.now(), "can", "base_link")
 
 
 

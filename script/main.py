@@ -66,6 +66,9 @@ class SquareDetector:
             self.s_queue.push(s)
             s_mean = self.s_queue.mean()
 
+            s_mean_pub= Point(x = s_mean[0], y = s_mean[1], z = s_mean[2])
+            self.pub.publish(s_mean_pub)
+
             rot = tf.transformations.quaternion_from_euler(0, 0.0, s_mean[2])
             trans = [s_mean[0], s_mean[1], 0.723]
             self.br.sendTransform(trans, rot, rospy.Time.now(), "can", "base_link")

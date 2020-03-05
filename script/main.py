@@ -10,7 +10,9 @@ from math import *
 import numpy as np
 from scipy import stats
 from scipy import optimize
+import scipy
 import time
+import utils
 
 from detect_square import detect_rect
 import cv2
@@ -32,6 +34,18 @@ class MyQueue:
         s_est_lst = [np.mean(np.array([s[i] for s in self.data])) for i in range(3)]
         return np.array(s_est_lst)
 
+def extract_rect(X):
+    rect = utils.minimum_bounding_rectangle(X)
+    center = np.mean(rect, axis=0)
+    p0 = rect[0, :]
+    p1 = rect[1, :]
+    p2 = rect[2, :]
+    vec1 = p1 - p0
+    vec2 = p2 - p1
+    area = np.linalg.norm(vec1) * np.linalg.norm(vec2)
+    theta = atan2(vec1[1], vec1[0]) % (pi/2)
+    return center, theta, area
+
 class SquareDetector:
     def __init__(self, n_ave = 6):
         self.sub = rospy.Subscriber("/cloud2d_projected", Projected, self.callback)
@@ -44,25 +58,17 @@ class SquareDetector:
         x1 = np.array(msg.x_array.data)
         x2 = np.array(msg.y_array.data)
         x = np.vstack((x1, x2))
-        s_est_, img_, isInvalid = detect_rect(x)
+        center, angle, area = extract_rect(x.T)
+        isValid = lambda area: area > 0.006 and area < 0.009
 
-        img = cv2.cvtColor(img_, cv2.COLOR_GRAY2BGR)
-        bridge = CvBridge()
-        msg = bridge.cv2_to_imgmsg(img, 'bgr8')
+        if isValid(area):
+            s = np.array([center[0], center[1], angle])
+            self.s_queue.push(s)
+            s_mean = self.s_queue.mean()
 
-        if not isInvalid:
-            self.s_queue.push(s_est_)
-            self.pub_img.publish(msg)
-            s_est = self.s_queue.mean()
-            print "average: " + str(s_est)
-            s_est_msg = Point(x = s_est[0], y = s_est[1], z = s_est[2])
-            self.pub.publish(s_est_msg)
-            trans = [s_est[0], s_est[1], 0.723]
-
-            rot = tf.transformations.quaternion_from_euler(0, 0.0, s_est[2])
+            rot = tf.transformations.quaternion_from_euler(0, 0.0, s_mean[2])
+            trans = [s_mean[0], s_mean[1], 0.723]
             self.br.sendTransform(trans, rot, rospy.Time.now(), "can", "base_link")
-
-
 
 if __name__=='__main__':
     rospy.init_node("detect_square", anonymous = True)

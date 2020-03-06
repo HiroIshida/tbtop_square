@@ -4,5 +4,4 @@
     <remap from="output" to="cloud2d_projected"/>
     <remap from="input" to="$(arg input)"/>
   </node>
-  <node pkg="tbtop_square" type="main_circle.py" name="square_detector" output="screen"/>
 </launch>

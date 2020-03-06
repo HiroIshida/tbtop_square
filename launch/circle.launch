@@ -1,0 +1,4 @@
+<launch>
+  <include file="$(find tbtop_square)/launch/tabletop_projection.launch"/> 
+  <node pkg="tbtop_square" type="main_circle.py" name="circle_detector" output="screen"/>
+</launch>

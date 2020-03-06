@@ -84,7 +84,7 @@ class SquareDetector:
         x2 = np.array(msg.y_array.data)
         x = np.vstack((x1, x2))
         center, angle, area = extract_rect(x.T)
-        isValid = lambda area: area > 0.006 and area < 0.009
+        isValid = lambda area: area > 0.006 and area < 0.012
 
         if isValid(area):
             #s = np.array([center[0], center[1], angle])

@@ -32,7 +32,7 @@ class MyQueue:
 class CircleDetector:
     def __init__(self, n_ave = 3):
         self.sub = rospy.Subscriber("/cloud2d_projected", Projected, self.callback)
-        self.pub = rospy.Publisher("/circle_center", Point, queue_size = 1)
+        self.pub = rospy.Publisher("/object_pose", Point, queue_size = 1)
         self.s_queue = MyQueue(n_ave)
         self.br = tf.TransformBroadcaster()
 
@@ -51,11 +51,13 @@ class CircleDetector:
         msg = Point()
         x_averaged = list(self.s_queue.mean())
 
+        rot = tf.transformations.quaternion_from_euler(0, 0.0, pi/4)
         trans = [x_averaged[0], x_averaged[1], 0.723]
-        self.br.sendTransform(trans, (0, 0, 0, 1), rospy.Time.now(), "can", "base_link")
+        self.br.sendTransform(trans, rot, rospy.Time.now(), "object", "base_link")
 
         print("center: " + str(x_averaged))
         msg.x, msg.y = x_averaged
+        msg.z = pi/4
         self.pub.publish(msg)
 
 if __name__=='__main__':

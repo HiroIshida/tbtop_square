@@ -73,8 +73,7 @@ def extract_rect(X):
 class SquareDetector:
     def __init__(self, n_ave = 6):
         self.sub = rospy.Subscriber("/cloud2d_projected", Projected, self.callback)
-        self.pub = rospy.Publisher("/square_pose", Point, queue_size = 1)
-        self.pub_img = rospy.Publisher("/tbtop_debug_image", Image)
+        self.pub = rospy.Publisher("/object_pose", Point, queue_size = 1)
         self.x_queue = MyQueue(n_ave, 2)
         self.angle_queue = S1Queue(6)
         self.br = tf.TransformBroadcaster()
@@ -101,7 +100,7 @@ class SquareDetector:
 
         rot = tf.transformations.quaternion_from_euler(0, 0.0, angle_mean)
         trans = [x_mean[0],x_mean[1], 0.723]
-        self.br.sendTransform(trans, rot, rospy.Time.now(), "can", "base_link")
+        self.br.sendTransform(trans, rot, rospy.Time.now(), "object", "base_link")
 
 if __name__=='__main__':
     rospy.init_node("detect_square", anonymous = True)

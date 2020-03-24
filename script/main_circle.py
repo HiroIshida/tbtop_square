@@ -8,6 +8,7 @@ from tbtop_square.msg import Projected
 from math import *
 import numpy as np
 from tf2_msgs.msg import TFMessage
+from std_srvs.srv import *
 import tf
 
 import cv2
@@ -32,8 +33,10 @@ class CircleDetector:
     def __init__(self, n_ave = 3):
         self.sub = rospy.Subscriber("/cloud2d_projected", Projected, self.callback)
         self.pub = rospy.Publisher("/object_pose", Point, queue_size = 1)
+        self.srv = rospy.Service("freeze", Empty, self.handle_freeze)
         self.s_queue = MyQueue(n_ave)
         self.br = tf.TransformBroadcaster()
+        self.isFrozen = False
 
     def callback(self, msg):
         print("tbtop: msg recieved")
@@ -45,6 +48,11 @@ class CircleDetector:
         x_mean = 0.5 * (b_min + b_max)
         self.s_queue.push(x_mean)
 
+    def handle_freeze(self, req):
+        print("srvice call")
+        return EmptyResponse()
+
+
     def publish(self):
         msg = Point()
         x_averaged = list(self.s_queue.mean())
@@ -53,7 +61,6 @@ class CircleDetector:
         trans = [x_averaged[0], x_averaged[1], 0.723]
         self.br.sendTransform(trans, rot, rospy.Time.now(), "object", "base_link")
 
-        print("center: " + str(x_averaged))
         msg.x, msg.y = x_averaged
         msg.z = pi/4
         self.pub.publish(msg)

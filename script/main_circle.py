@@ -50,8 +50,8 @@ class CircleDetector:
 
     def handle_freeze(self, req):
         print("srvice call")
+        self.isFrozen = not self.isFrozen
         return EmptyResponse()
-
 
     def publish(self):
         msg = Point()

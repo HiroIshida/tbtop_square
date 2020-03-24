@@ -40,13 +40,14 @@ class CircleDetector:
 
     def callback(self, msg):
         print("tbtop: msg recieved")
-        x1 = np.array(msg.x_array.data)
-        x2 = np.array(msg.y_array.data)
-        x = np.vstack((x1, x2))
-        b_min = np.min(x, axis=1)
-        b_max = np.max(x, axis=1)
-        x_mean = 0.5 * (b_min + b_max)
-        self.s_queue.push(x_mean)
+        if not self.isFrozen:
+            x1 = np.array(msg.x_array.data)
+            x2 = np.array(msg.y_array.data)
+            x = np.vstack((x1, x2))
+            b_min = np.min(x, axis=1)
+            b_max = np.max(x, axis=1)
+            x_mean = 0.5 * (b_min + b_max)
+            self.s_queue.push(x_mean)
 
     def handle_freeze(self, req):
         print("srvice call")

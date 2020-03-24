@@ -43,10 +43,9 @@ class CircleDetector:
         b_min = np.min(x, axis=1)
         b_max = np.max(x, axis=1)
         x_mean = 0.5 * (b_min + b_max)
-        
-
         self.s_queue.push(x_mean)
 
+    def publish(self):
         msg = Point()
         x_averaged = list(self.s_queue.mean())
 
@@ -62,9 +61,9 @@ class CircleDetector:
 if __name__=='__main__':
     rospy.init_node("detect_circle", anonymous = True)
     cd = CircleDetector()
-    rospy.spin()
+    rate = rospy.Rate(10)
 
-
-
-
+    while not rospy.is_shutdown():
+        cd.publish()
+        rate.sleep()
 

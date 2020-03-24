@@ -10,7 +10,6 @@ import numpy as np
 from tf2_msgs.msg import TFMessage
 import tf
 
-from detect_square import detect_rect
 import cv2
 from cv_bridge import CvBridge
 
